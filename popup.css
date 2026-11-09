@@ -1,0 +1,183 @@
+:root {
+  --bg: #ffffff;
+  --fg: #1d1d1f;
+  --muted: #6e6e73;
+  --surface: #f2f2f5;
+  --surface-hover: #e5e5ea;
+  --accent: #fb542b;
+  --accent-hover: #e8441c;
+  --accent-fg: #ffffff;
+  --border: #d2d2d7;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1c1c1e;
+    --fg: #f5f5f7;
+    --muted: #98989d;
+    --surface: #2c2c2e;
+    --surface-hover: #3a3a3c;
+    --border: #3a3a3c;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 280px;
+  margin: 0;
+  padding: 14px;
+  background: var(--bg);
+  color: var(--fg);
+  font: 13px/1.4 system-ui, -apple-system, sans-serif;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: 0;
+  border-radius: 8px;
+  background: var(--surface);
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  background: var(--surface-hover);
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.toggle {
+  width: 100%;
+  margin-bottom: 14px;
+  padding: 9px 0;
+  font-weight: 600;
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+
+.toggle:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.toggle.on {
+  background: var(--surface);
+  color: var(--fg);
+}
+
+.toggle.on:hover:not(:disabled) {
+  background: var(--surface-hover);
+}
+
+.speed {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.round {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 20px;
+}
+
+#speed {
+  font-size: 32px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.status {
+  margin: 10px 0 0;
+  color: var(--muted);
+  text-align: center;
+}
+
+.presets {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.presets button {
+  padding: 7px 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.presets button.active {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+
+.reset {
+  width: 100%;
+  margin-top: 6px;
+  padding: 7px 0;
+}
+
+details {
+  margin-top: 12px;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.settings {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.settings label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.settings label.check {
+  justify-content: flex-start;
+}
+
+.settings input[type='number'] {
+  width: 72px;
+  padding: 4px 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--fg);
+  font: inherit;
+}
+
+.shortcuts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 10px;
+  margin: 10px 0 0;
+}
+
+.shortcuts dt {
+  font-weight: 700;
+  font-family: ui-monospace, monospace;
+}
+
+.shortcuts dd {
+  margin: 0;
+  color: var(--muted);
+}
+
+.note {
+  margin: 8px 0 0;
+  color: var(--muted);
+}

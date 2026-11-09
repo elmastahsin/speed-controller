@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<title>Speed Controller screenshot</title>
+<style>
+  /* Popup colors (dark theme from popup.css) */
+  :root {
+    --bg: #1c1c1e; --fg: #f5f5f7; --muted: #98989d; --surface: #2c2c2e;
+    --surface-hover: #3a3a3c; --accent: #fb542b; --accent-fg: #fff; --border: #3a3a3c;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1280px; height: 800px; overflow: hidden; }
+  html { background: #121214; }
+  body {
+    font: 13px/1.4 system-ui, -apple-system, sans-serif;
+    background: linear-gradient(135deg, #2b1a14 0%, #121214 60%);
+    color: #f5f5f7;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* Browser window */
+  .window {
+    position: relative;
+    width: 1160px; height: 700px;
+    border-radius: 12px; overflow: hidden;
+    background: #0f0f0f;
+    box-shadow: 0 30px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.08);
+  }
+  .chrome {
+    height: 76px; background: #202124; border-bottom: 1px solid #000;
+  }
+  .tabs { height: 36px; display: flex; align-items: flex-end; padding-left: 80px; position: relative; }
+  .dots { position: absolute; left: 16px; top: 13px; display: flex; gap: 8px; }
+  .dots i { width: 12px; height: 12px; border-radius: 50%; display: block; }
+  .tab {
+    height: 30px; width: 220px; background: #35363a; border-radius: 8px 8px 0 0;
+    padding: 7px 14px; color: #e8eaed; font-size: 12px; white-space: nowrap; overflow: hidden;
+  }
+  .bar { height: 40px; background: #35363a; display: flex; align-items: center; padding: 0 12px; gap: 10px; }
+  .nav { color: #9aa0a6; font-size: 16px; width: 18px; text-align: center; }
+  .url {
+    flex: 1; height: 28px; border-radius: 14px; background: #202124; color: #bdc1c6;
+    padding: 6px 14px; font-size: 13px;
+  }
+  .ext {
+    width: 28px; height: 28px; border-radius: 6px; background: #4a4b4f;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ext img { width: 18px; height: 18px; }
+
+  /* Page */
+  .page { padding: 22px 28px; display: flex; gap: 22px; }
+  .main { width: 760px; }
+  .player {
+    position: relative; width: 760px; height: 428px; border-radius: 12px; overflow: hidden;
+    background:
+      radial-gradient(circle at 70% 35%, rgba(251,84,43,.55), transparent 45%),
+      radial-gradient(circle at 25% 75%, rgba(80,120,255,.45), transparent 50%),
+      linear-gradient(160deg, #1d2a44, #0b0d14);
+  }
+  .player .hills {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 55%;
+    background:
+      radial-gradient(ellipse 60% 70% at 20% 100%, #10141f 60%, transparent 61%),
+      radial-gradient(ellipse 70% 60% at 80% 100%, #161b29 60%, transparent 61%);
+  }
+  .player .sun {
+    position: absolute; width: 110px; height: 110px; border-radius: 50%;
+    left: 470px; top: 90px; background: radial-gradient(circle, #ffd2a6, #fb7a4b 70%);
+    box-shadow: 0 0 80px rgba(251,122,75,.7);
+  }
+  .controls {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 54px; padding: 0 16px;
+    background: linear-gradient(transparent, rgba(0,0,0,.75));
+    display: flex; align-items: flex-end; flex-direction: column; justify-content: flex-end;
+  }
+  .progress { width: 100%; height: 4px; background: rgba(255,255,255,.25); border-radius: 2px; margin-bottom: 10px; }
+  .progress b { display: block; width: 38%; height: 100%; background: #fb542b; border-radius: 2px; }
+  .ctlrow { width: 100%; display: flex; justify-content: space-between; color: #fff; font-size: 13px; padding-bottom: 10px; }
+
+  /* Overlay (same styles as content.js OVERLAY_CSS, shown in hover state) */
+  .ov {
+    position: absolute; top: 8px; left: 8px;
+    display: inline-flex; align-items: center; gap: 2px; padding: 3px 6px; border-radius: 6px;
+    background: rgba(0,0,0,.65); color: #fff; font: 600 13px/1.2 system-ui, -apple-system, sans-serif;
+  }
+  .ov span.b { padding: 0 5px; }
+
+  .title { font-size: 18px; font-weight: 600; margin: 14px 0 6px; color: #f1f1f1; }
+  .meta { color: #aaa; font-size: 13px; }
+  .side { flex: 1; display: grid; gap: 12px; align-content: start; }
+  .card { display: flex; gap: 10px; }
+  .thumb { width: 150px; height: 84px; border-radius: 8px; flex: none; }
+  .lines i { display: block; height: 10px; border-radius: 4px; background: #2a2a2a; margin: 6px 0; }
+
+  /* Popup (from popup.css) */
+  .popup {
+    position: absolute; top: 72px; right: 14px; width: 280px; padding: 14px;
+    background: var(--bg); color: var(--fg); border-radius: 10px;
+    box-shadow: 0 12px 40px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.08);
+  }
+  .popup button { font: inherit; color: inherit; border: 0; border-radius: 8px; background: var(--surface); }
+  .toggle { width: 100%; margin-bottom: 14px; padding: 9px 0; font-weight: 600; }
+  .speed { display: flex; align-items: center; justify-content: space-between; }
+  .round { width: 40px; height: 40px; border-radius: 50% !important; font-size: 20px !important; }
+  .val { font-size: 32px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .presets { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 14px; }
+  .presets button { padding: 7px 0; font-variant-numeric: tabular-nums; }
+  .presets button.active { background: var(--accent); color: var(--accent-fg); }
+  .reset { width: 100%; margin-top: 6px; padding: 7px 0; }
+  .det { margin-top: 12px; border-top: 1px solid var(--border); padding-top: 10px; }
+  .sum { font-weight: 600; }
+  .shortcuts { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; margin: 10px 0 0; }
+  .shortcuts dt { font-weight: 700; font-family: ui-monospace, monospace; }
+  .shortcuts dd { margin: 0; color: var(--muted); }
+  .note { margin: 8px 0 0; color: var(--muted); }
+
+  /* Variant 2: headline */
+  .v2 body, body.v2 { justify-content: flex-start; }
+</style>
+</head>
+<body>
+  <div class="window">
+    <div class="chrome">
+      <div class="tabs">
+        <div class="dots"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div>
+        <div class="tab">Gün batımı timelapse – Video</div>
+      </div>
+      <div class="bar">
+        <span class="nav">←</span><span class="nav">→</span><span class="nav">↻</span>
+        <div class="url">example.com/watch/sunset-timelapse</div>
+        <div class="ext"><img src="../../icons/icon48.png" alt="" /></div>
+      </div>
+    </div>
+
+    <div class="page">
+      <div class="main">
+        <div class="player">
+          <div class="sun"></div>
+          <div class="hills"></div>
+          <div class="ov"><span class="b">−</span><span id="ovlabel">1.50x</span><span class="b">+</span></div>
+          <div class="controls">
+            <div class="progress"><b></b></div>
+            <div class="ctlrow"><span>❚❚ &nbsp; 4:12 / 11:05</span><span>⚙ &nbsp; ⛶</span></div>
+          </div>
+        </div>
+        <div class="title">Gün batımı timelapse – 4K</div>
+        <div class="meta">12 B görüntüleme · 2 gün önce</div>
+      </div>
+      <div class="side">
+        <div class="card"><div class="thumb" style="background:linear-gradient(135deg,#3b2a6b,#d0573a)"></div><div class="lines" style="flex:1"><i style="width:90%"></i><i style="width:60%"></i><i style="width:40%"></i></div></div>
+        <div class="card"><div class="thumb" style="background:linear-gradient(135deg,#1f4d4a,#7fc4a8)"></div><div class="lines" style="flex:1"><i style="width:85%"></i><i style="width:55%"></i><i style="width:35%"></i></div></div>
+        <div class="card"><div class="thumb" style="background:linear-gradient(135deg,#4a2a1f,#e3a14f)"></div><div class="lines" style="flex:1"><i style="width:80%"></i><i style="width:65%"></i><i style="width:30%"></i></div></div>
+      </div>
+    </div>
+
+    <div class="popup">
+      <button class="toggle">Bu sekmede kapat</button>
+      <div class="speed">
+        <button class="round">−</button>
+        <span class="val" id="val">1.50x</span>
+        <button class="round">+</button>
+      </div>
+      <div class="presets" id="presets"></div>
+      <button class="reset">1.00x'e sıfırla</button>
+      <div class="det"><div class="sum">▸ Ayarlar</div></div>
+      <div class="det" id="kisa">
+        <div class="sum">▸ Kısayollar</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const params = new URLSearchParams(location.search);
+  const speed = Number(params.get('speed') || 1.5);
+  const label = speed.toFixed(2) + 'x';
+  document.getElementById('val').textContent = label;
+  document.getElementById('ovlabel').textContent = label;
+  const p = document.getElementById('presets');
+  for (const s of [0.5, 1, 1.25, 1.5, 1.75, 2, 2.5, 3]) {
+    const b = document.createElement('button');
+    b.textContent = s.toFixed(2) + 'x';
+    if (s === speed) b.className = 'active';
+    p.append(b);
+  }
+  if (params.get('shortcuts')) {
+    document.getElementById('kisa').innerHTML = `
+      <div class="sum">▾ Kısayollar</div>
+      <dl class="shortcuts">
+        <dt>S</dt><dd>Yavaşlat</dd><dt>D</dt><dd>Hızlandır</dd>
+        <dt>R</dt><dd>1.00x'e sıfırla</dd><dt>G</dt><dd>1.00x ↔ tercih edilen hız</dd>
+        <dt>Z</dt><dd>10 sn geri</dd><dt>X</dt><dd>10 sn ileri</dd>
+        <dt>V</dt><dd>Hız göstergesini aç/kapat</dd>
+      </dl>
+      <p class="note">Kısayollar yalnızca açtığın sekmede çalışır.</p>`;
+  }
+</script>
+</body>
+</html>
+

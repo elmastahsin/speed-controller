@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<title>Speed Controller promo</title>
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  html, body { overflow: hidden; }
+  html { height: 100%; background: #141416; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    color: #f5f5f7;
+    background:
+      radial-gradient(circle at 85% 20%, rgba(251,84,43,.45), transparent 45%),
+      radial-gradient(circle at 10% 90%, rgba(80,120,255,.25), transparent 50%),
+      #141416;
+    display: flex; align-items: center;
+  }
+  .brand { display: flex; align-items: center; }
+  .brand img { display: block; }
+  h1 { font-weight: 800; letter-spacing: -0.02em; }
+  p { color: #c7c7cc; }
+  .chips { display: flex; flex-wrap: wrap; }
+  .chip { background: #2c2c2e; border-radius: 999px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .chip.on { background: #fb542b; color: #fff; }
+  kbd {
+    display: inline-block; background: #2c2c2e; border: 1px solid #48484a; border-bottom-width: 3px;
+    border-radius: 8px; font: 700 1em ui-monospace, monospace; text-align: center;
+  }
+
+  /* Small 440x280 */
+  body.small { width: 440px; height: 280px; padding: 30px; }
+  .small .wrap { display: grid; gap: 14px; }
+  .small .brand img { width: 64px; height: 64px; margin-right: 14px; }
+  .small h1 { font-size: 34px; line-height: 1.05; }
+  .small p { font-size: 16px; }
+  .small .chips { gap: 6px; }
+  .small .chip { padding: 5px 11px; font-size: 14px; }
+
+  /* Marquee 1400x560 */
+  body.marquee { width: 1400px; height: 560px; padding: 0 90px; justify-content: space-between; }
+  .marquee .left { display: grid; gap: 26px; width: 720px; }
+  .marquee .brand img { width: 96px; height: 96px; margin-right: 24px; }
+  .marquee h1 { font-size: 64px; line-height: 1.05; }
+  .marquee p { font-size: 26px; line-height: 1.35; }
+  .marquee .keys { display: flex; gap: 22px; font-size: 20px; color: #c7c7cc; align-items: center; }
+  .marquee kbd { min-width: 44px; padding: 6px 10px; margin-right: 8px; color: #fff; font-size: 22px; }
+  .marquee .big {
+    width: 420px; height: 420px; border-radius: 40px; background: #1c1c1e;
+    box-shadow: 0 30px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.08);
+    display: grid; place-content: center; gap: 28px; text-align: center;
+  }
+  .marquee .val { font-size: 120px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .marquee .chips { gap: 10px; justify-content: center; width: 340px; }
+  .marquee .chip { padding: 8px 16px; font-size: 20px; }
+</style>
+</head>
+<body>
+<script>
+  const kind = new URLSearchParams(location.search).get('kind') || 'small';
+  document.body.className = kind;
+  const icon = '../../icons/icon128.png';
+  const chips = (list, on) => list.map(s => `<span class="chip${s === on ? ' on' : ''}">${s.toFixed(2)}x</span>`).join('');
+  if (kind === 'small') {
+    document.body.innerHTML = `
+      <div class="wrap">
+        <div class="brand"><img src="${icon}"><h1>Speed<br>Controller</h1></div>
+        <p>Video hızını klavyeden kontrol et.</p>
+        <div class="chips">${chips([1, 1.5, 2, 3], 1.5)}</div>
+      </div>`;
+  } else {
+    document.body.innerHTML = `
+      <div class="left">
+        <div class="brand"><img src="${icon}"><h1>Speed Controller</h1></div>
+        <p>Video ve audio oynatma hızını tek tuşla kontrol et.<br>Yalnızca açtığın sekmede çalışır, veri toplamaz.</p>
+        <div class="keys">
+          <span><kbd>S</kbd>yavaşlat</span><span><kbd>D</kbd>hızlandır</span>
+          <span><kbd>R</kbd>sıfırla</span><span><kbd>G</kbd>tercih edilen hız</span>
+        </div>
+      </div>
+      <div class="big">
+        <div class="val">1.50x</div>
+        <div class="chips">${chips([0.5, 1, 1.25, 1.5, 2, 3], 1.5)}</div>
+      </div>`;
+  }
+</script>
+</body>
+</html>
